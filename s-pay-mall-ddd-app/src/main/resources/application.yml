@@ -1,0 +1,9 @@
+spring:
+  config:
+    name: s-pay-mall-ddd-app
+  profiles:
+    active: dev
+    # dev: 开发环境
+    # test: 测试环境
+    # prod: 生产环境
+
