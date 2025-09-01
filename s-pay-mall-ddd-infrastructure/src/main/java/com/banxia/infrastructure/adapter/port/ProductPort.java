@@ -2,12 +2,9 @@ package com.banxia.infrastructure.adapter.port;
 
 import com.banxia.domain.order.adapter.port.IProductPort;
 import com.banxia.domain.order.model.entity.ProductEntity;
-import com.banxia.infrastructure.dao.IOrderDao;
 import com.banxia.infrastructure.gateway.ProductRPC;
 import com.banxia.infrastructure.gateway.dto.ProductDTO;
 import org.springframework.stereotype.Component;
-
-import javax.annotation.Resource;
 
 /**
  * @Author BanXia
@@ -15,11 +12,11 @@ import javax.annotation.Resource;
  * @Date 2025/9/1 21:38
  */
 @Component
-public class ProductPortImpl implements IProductPort {
+public class ProductPort implements IProductPort {
 
     private final ProductRPC productRPC;
 
-    public ProductPortImpl(ProductRPC productRPC) {
+    public ProductPort(ProductRPC productRPC) {
         this.productRPC = productRPC;
     }
 
@@ -34,4 +31,6 @@ public class ProductPortImpl implements IProductPort {
                 .productPrice(productDTO.getProductPrice())
                 .build();
     }
+
+
 }

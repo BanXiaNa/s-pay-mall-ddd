@@ -11,4 +11,6 @@ import com.banxia.domain.order.model.entity.ShopCartEntity;
 public interface IOrderService {
 
     PayOrderEntity createOrder(ShopCartEntity shopCartEntity) throws Exception;
+
+//    void changeOrderPaySuccess(String tradeNo);
 }
