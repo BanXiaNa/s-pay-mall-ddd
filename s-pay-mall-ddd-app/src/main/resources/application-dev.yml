@@ -1,5 +1,5 @@
 server:
-  port: 8091
+  port: 8080
 
 # 线程池配置
 thread:
@@ -40,3 +40,13 @@ logging:
   level:
     root: info
   config: classpath:logback-spring.xml
+
+# 微信公众号对接
+weixin:
+  config:
+    originalid: gh_5d56e8de7de7
+    token: 3387
+    app-id: wxa472b5da198cf02f
+    app-secret: 90d671bf7122c329ee6a6b980ca7cfc3
+    # 登陆成功模板id
+    template-id: NmPOTnHL_rfG1qgCLQ1cSgCr4GcWb3QUA89-Xl6bjiY
