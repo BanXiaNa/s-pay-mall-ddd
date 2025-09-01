@@ -1,9 +1,6 @@
 package com.banxia.infrastructure.adapter.repository;
 
-import com.alibaba.fastjson.JSONObject;
-import com.alipay.api.AlipayApiException;
-import com.alipay.api.AlipayClient;
-import com.alipay.api.request.AlipayTradePagePayRequest;
+import com.alibaba.fastjson.JSON;
 import com.banxia.domain.order.adapter.repository.IOrderRepository;
 import com.banxia.domain.order.model.aggregate.CreateOrderAggregate;
 import com.banxia.domain.order.model.entity.OrderEntity;
@@ -11,15 +8,17 @@ import com.banxia.domain.order.model.entity.PayOrderEntity;
 import com.banxia.domain.order.model.entity.ProductEntity;
 import com.banxia.domain.order.model.entity.ShopCartEntity;
 import com.banxia.domain.order.model.valobj.OrderStatusVO;
-import com.banxia.infrastructure.dao.IOrderDao;
+import com.banxia.infrastructure.adapter.event.PaySuccessMessageEvent;
+import com.banxia.infrastructure.dao.OrderDao;
 import com.banxia.infrastructure.dao.po.PayOrder;
-import org.apache.commons.lang3.RandomStringUtils;
-import org.springframework.beans.factory.annotation.Value;
+import com.banxia.types.event.BaseEvent;
+import com.google.common.eventbus.EventBus;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import javax.annotation.Resource;
-import java.math.BigDecimal;
-import java.util.Date;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * @Author BanXia
@@ -30,7 +29,11 @@ import java.util.Date;
 public class OrderRepositoryImpl implements IOrderRepository {
 
     @Resource
-    private IOrderDao iOrderDao;
+    private OrderDao orderDao;
+    @Resource
+    private PaySuccessMessageEvent paySuccessMessageEvent;
+    @Autowired
+    private EventBus eventBus;
 
     @Override
     public OrderEntity queryOrder(ShopCartEntity shopCartEntity) {
@@ -40,7 +43,7 @@ public class OrderRepositoryImpl implements IOrderRepository {
                 .productId(shopCartEntity.getProductId())
                 .build();
 
-        PayOrder unPayOrder = iOrderDao.queryUnPayOrder(payOrderReq);
+        PayOrder unPayOrder = orderDao.queryUnPayOrder(payOrderReq);
         if(unPayOrder == null){
             return null;
         }
@@ -62,7 +65,7 @@ public class OrderRepositoryImpl implements IOrderRepository {
         OrderEntity orderEntity = orderAggregate.getOrderEntity();
         ProductEntity productEntity = orderAggregate.getProductEntity();
 
-        iOrderDao.insert(PayOrder.builder()
+        orderDao.insert(PayOrder.builder()
                 .userId(orderAggregate.getUserId())
                 .productId(productEntity.getProductId())
                 .productName(productEntity.getProductName())
@@ -83,6 +86,40 @@ public class OrderRepositoryImpl implements IOrderRepository {
                 .status(payOrderEntity.getOrderStatusVO().getCode())
                 .build();
 
-        iOrderDao.updatePayOrderInfo(payOrder);
+        orderDao.updatePayOrderInfo(payOrder);
+    }
+
+    @Override
+    public void changeOrderPaySuccess(String orderId) {
+        PayOrder payOrderReq = PayOrder.builder()
+                .orderId(orderId)
+                .status(OrderStatusVO.PAY_SUCCESS.getCode())
+                .build();
+        orderDao.changeOrderPaySuccess(payOrderReq);
+
+        // 发布支付成功事件
+        BaseEvent.EventMessage<PaySuccessMessageEvent.PaySuccessMessage> eventMessage = paySuccessMessageEvent.buildEventMessage(
+                PaySuccessMessageEvent.PaySuccessMessage.builder()
+                        .tradeNo(orderId)
+                        .build()
+        );
+        PaySuccessMessageEvent.PaySuccessMessage paySuccessMessage = eventMessage.getData();
+
+        eventBus.post(paySuccessMessage);
+    }
+
+    @Override
+    public List<String> queryNoPayNotifyOrderList() {
+        return orderDao.queryNoPayNotifyOrderList();
+    }
+
+    @Override
+    public List<String> queryTimeOutOrderList() {
+        return orderDao.queryTimeOutOrderList();
+    }
+
+    @Override
+    public boolean changeOrderPayClose(String orderId) {
+        return orderDao.changeOrderPayClose(orderId);
     }
 }

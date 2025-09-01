@@ -1,5 +1,6 @@
 package com.banxia.config;
 
+import com.banxia.trigger.listener.OrderPaySuccessListener;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.eventbus.EventBus;
@@ -35,5 +36,11 @@ public class GuavaConfig {
                 .build();
     }
 
-
+    @Bean
+    public EventBus eventBusListener(OrderPaySuccessListener listener ) {
+        EventBus eventBus = new EventBus();
+        // 注册监听器
+        eventBus.register(listener);
+        return eventBus;
+    }
 }

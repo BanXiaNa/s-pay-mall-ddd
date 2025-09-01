@@ -7,6 +7,7 @@ import com.banxia.domain.order.model.entity.PayOrderEntity;
 import com.banxia.domain.order.model.entity.ShopCartEntity;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 /**
  * @Author BanXia
@@ -22,4 +23,12 @@ public interface IOrderRepository {
 
 
     void updatePayOrderInfo(PayOrderEntity payOrderEntity);
+
+    void changeOrderPaySuccess(String orderId);
+
+    List<String> queryNoPayNotifyOrderList();
+
+    List<String> queryTimeOutOrderList();
+
+    boolean changeOrderPayClose(String orderId);
 }

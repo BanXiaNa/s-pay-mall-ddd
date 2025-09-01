@@ -12,7 +12,7 @@ import java.util.List;
  * @Date 2025/8/15 20:13
  */
 @Mapper
-public interface IOrderDao {
+public interface OrderDao {
 
     void insert (PayOrder payOrder);
 
@@ -22,9 +22,9 @@ public interface IOrderDao {
 
     void changeOrderPaySuccess(PayOrder order);
 
-    List<String> queryTimeoutOrderList();
-
-    List<String> queryNoPayNotifyOrder();
-
     boolean changeOrderPayClose(String orderId);
+
+    List<String> queryTimeOutOrderList();
+
+    List<String> queryNoPayNotifyOrderList();
 }

@@ -7,13 +7,10 @@ import com.alipay.api.request.AlipayTradePagePayRequest;
 import com.banxia.domain.order.adapter.port.IOrderPort;
 import com.banxia.domain.order.model.entity.PayOrderEntity;
 import com.banxia.domain.order.model.valobj.OrderStatusVO;
-import com.banxia.infrastructure.dao.IOrderDao;
-import com.banxia.infrastructure.dao.po.PayOrder;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
-import javax.annotation.Resources;
 import java.math.BigDecimal;
 
 /**

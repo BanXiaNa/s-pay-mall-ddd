@@ -11,6 +11,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * @Author BanXia
@@ -35,9 +37,29 @@ public class OrderService extends AbstractOrderService {
 
         PayOrderEntity payOrderEntity = iOrderPort.doPrepayOrder(productId, productName, orderId, totalAmount);
 
-//        iOrderRepository.updatePayOrderInfo(payOrderEntity);
+        iOrderRepository.updatePayOrderInfo(payOrderEntity);
 
         return payOrderEntity;
 
+    }
+
+    @Override
+    public void changeOrderPaySuccess(String orderId) {
+        iOrderRepository.changeOrderPaySuccess(orderId);
+    }
+
+    @Override
+    public List<String> queryNoPayNotifyOrderList() {
+        return iOrderRepository.queryNoPayNotifyOrderList();
+    }
+
+    @Override
+    public List<String> queryTimeOutOrderList() {
+        return iOrderRepository.queryTimeOutOrderList();
+    }
+
+    @Override
+    public boolean changeOrderPayClose(String orderId) {
+        return iOrderRepository.changeOrderPayClose(orderId);
     }
 }

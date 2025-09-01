@@ -3,6 +3,8 @@ package com.banxia.domain.order.service;
 import com.banxia.domain.order.model.entity.PayOrderEntity;
 import com.banxia.domain.order.model.entity.ShopCartEntity;
 
+import java.util.List;
+
 /**
  * @Author BanXia
  * @description:
@@ -12,5 +14,11 @@ public interface IOrderService {
 
     PayOrderEntity createOrder(ShopCartEntity shopCartEntity) throws Exception;
 
-//    void changeOrderPaySuccess(String tradeNo);
+    void changeOrderPaySuccess(String orderId);
+
+    List<String> queryNoPayNotifyOrderList();
+
+    List<String> queryTimeOutOrderList();
+
+    boolean changeOrderPayClose(String orderId);
 }

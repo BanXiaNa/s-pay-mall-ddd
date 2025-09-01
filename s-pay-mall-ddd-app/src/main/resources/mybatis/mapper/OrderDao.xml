@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.banxia.infrastructure.dao.IOrderDao">
+<mapper namespace="com.banxia.infrastructure.dao.OrderDao">
 
     <resultMap id="dataMap" type="com.banxia.infrastructure.dao.po.PayOrder">
         <id column="id" property="id"/>
@@ -46,14 +46,14 @@
         limit 1
     </select>
 
-    <select id="queryTimeoutOrderList" parameterType="java.lang.String" resultType="java.lang.String">
+    <select id="queryTimeOutOrderList" parameterType="java.lang.String" resultType="java.lang.String">
         select order_id as orderId from pay_order
         where status = 'PAY_WAIT' and now() >= order_time + interval 30 minute
         order by id asc
         limit 50
     </select>
 
-    <select id="queryNoPayNotifyOrder" parameterType="java.lang.String" resultType="java.lang.String">
+    <select id="queryNoPayNotifyOrderList" parameterType="java.lang.String" resultType="java.lang.String">
         select order_id as orderId from pay_order
         where status = 'PAY_WAIT' and now() >= order_time + interval 1 minute
         order by id asc
